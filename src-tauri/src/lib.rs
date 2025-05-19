@@ -4,7 +4,6 @@
 // use tauri::Manager;
 // use tauri::WebviewWindowBuilder;
 
-
 // #[tauri::command]
 // fn floating(app: AppHandle) -> tauri::Result<()> {
 //     match app.webview_windows().get("floating") {
@@ -28,6 +27,7 @@
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_opener::init())
         // .invoke_handler(tauri::generate_handler![floating])
         .run(tauri::generate_context!())

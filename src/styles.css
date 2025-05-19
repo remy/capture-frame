@@ -30,6 +30,7 @@ button {
 html,
 body {
   height: 100%;
+  overflow: hidden;
 }
 
 html {
@@ -80,7 +81,7 @@ input {
   color: black;
   font-size: inherit;
   text-align: center;
-  width: 40px;
+  width: 60px;
 }
 
 button {
