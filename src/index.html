@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <script src="./main.mjs" type="module"></script>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+
+  <body>
+    <div class="dimensions">
+      <!-- <div class="controls"> -->
+      <div>
+        <label for="width">Dimensions</label>
+        <input id="width" type="text" data-min="1" value="800">
+        <span class="spacer">×</span>
+        <input id="height" type="text" data-min="1" value="600">
+      </div>
+      <div>
+        <label for="x" title="X, Y, Bottom, Right">Offset XY</label>
+        <input id="x" data-min="0" value="600"><span class="spacer"> / </span>
+        <input id="y" data-min="0" value="600">
+        <!-- :
+        <span id="bottom">0</span> /
+        <span id="right">0</span> -->
+      </div>
+      <div class="border">
+        <label for="border">Border</label> <input id="border" type="color">
+        <!-- <span hidden id="upload">
+          <span>Background [transparent]</span>
+          <input type="file" accept="image/png, image/jpeg, image/gif">
+
+        </span> -->
+      </div>
+      <!-- </div> -->
+      <button>Lock</button>
+    </div>
+
+  </body>
+
+</html>
