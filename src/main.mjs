@@ -1,57 +1,82 @@
-// when using `"withGlobalTauri": true`, you may use
-const { event, window: tauriWindow, webview } = window.__TAURI__;
-const { exit } = window.__TAURI__.process;
+import Cycle from './Cycle.mjs';
 
-const appWindow = tauriWindow.getCurrentWindow();
+// when using `"withGlobalTauri": true`, you may use
+const API = window.__TAURI__;
+const { event, window: tauriWindow, webview, process, menu } = API;
 
 let locked = false;
 
-const $ = (s) => document.querySelector(s);
-
+const appWindow = tauriWindow.getCurrentWindow();
 const $width = $('#width');
 const $height = $('#height');
 const $frame = $('#frame');
 const $button = $('button');
 const $x = $('#x');
 const $y = $('#y');
+const x = new Cycle($x);
+const y = new Cycle($y);
+const width = new Cycle($width);
+const height = new Cycle($height);
 
-appWindow.onCloseRequested(async (event) => {
-  exit();
-});
+const state = {
+  x: 100,
+  y: 100,
+  width: 1280,
+  height: 720,
+  locked: false,
+  floating: false,
+  titleBar: true,
+};
+
+x.onUpdate = updateFramePosition('xy');
+y.onUpdate = updateFramePosition('xy');
+width.onUpdate = updateFramePosition('dims');
+height.onUpdate = updateFramePosition('dims');
 
 $button.addEventListener(
   'click',
   () => {
     locked = !locked;
-    event.emitTo('frame', 'lock', { locked });
-    document.body.classList.toggle('locked', locked);
+    event.emitTo('frame', locked ? 'lock' : 'unlock');
     $button.textContent = locked ? 'Unlock' : 'Lock';
+    document.body.classList.toggle('locked', locked);
   },
   false
 );
 
 event.listen('resize', (event) => {
-  const { width, height } = event.payload;
-  console.log({ width, height });
-  $width.value = width;
-  $height.value = height;
-});
-
-event.listen('resize', (event) => {
-  const { width, height } = event.payload;
-  console.log({ width, height });
-  $width.value = width;
-  $height.value = height;
+  width.setValue(event.payload.width);
+  height.setValue(event.payload.height);
 });
 
 event.listen('position', (event) => {
-  const { x, y } = event.payload;
-  console.log({ x, y });
-  $x.value = x;
-  $y.value = y;
+  x.setValue(event.payload.x);
+  y.setValue(event.payload.y);
 });
 
 event.listen('log', (event) => {
   const { args } = event.payload;
   console.log('frame', ...args);
 });
+
+function updateState(prop, value) {
+  state[prop] = value;
+  appWindow.emitTo('frame', 'state', { prop, value });
+}
+
+function $(selector) {
+  return document.querySelector(selector);
+}
+
+function updateFramePosition(type) {
+  return () => {
+    if (type === 'xy') {
+      appWindow.emitTo('frame', 'xy', { x: x.value, y: y.value });
+    } else if (type === 'dims') {
+      appWindow.emitTo('frame', 'dims', {
+        width: width.value,
+        height: height.value,
+      });
+    }
+  };
+}

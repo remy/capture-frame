@@ -1,12 +1,16 @@
 * {
   box-sizing: border-box;
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-app-region: no-drag;
 }
 
 [hidden] {
   display: none !important;
 }
 
-:not(input):not(textarea),
+/* :not(input):not(textarea),
 :not(input):not(textarea)::after,
 :not(input):not(textarea)::before {
   -ms-overflow-style: scrollbar;
@@ -15,11 +19,10 @@
   -webkit-user-select: none;
   user-select: none;
   cursor: default;
-}
+} */
 
-span:not(contenteditable),
 label {
-  pointer-events: none;
+  cursor: pointer;
 }
 
 input,
@@ -30,7 +33,7 @@ button {
 html,
 body {
   height: 100%;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 html {
@@ -72,6 +75,7 @@ body {
 }
 
 input {
+  cursor: pointer;
   background: rgba(255, 255, 255, 0.2);
   border: 1px solid #999;
   padding: 4px;
@@ -115,7 +119,7 @@ input:focus {
   & > * {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
 
     & > :first-child {
       flex: 1;
@@ -158,7 +162,7 @@ label {
 }
 
 * + label {
-  padding-left: 16px;
+  padding-left: 4px;
 }
 
 .locked .dimensions * {
@@ -258,4 +262,24 @@ label {
 
 ::-webkit-color-swatch {
   border-color: transparent;
+}
+
+fieldset {
+  border: 1px solid #999;
+}
+
+.windowPreview {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+
+  & > div {
+    display: flex;
+    align-items: end;
+
+    :first-child {
+      flex: 0;
+      width: fit-content;
+    }
+  }
 }
