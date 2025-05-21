@@ -2,7 +2,7 @@ export default class Cycle {
   constructor(el, pad = 1) {
     this.el = el;
     this.pad = pad;
-    this.min = parseInt(el.dataset.min, 10);
+    this.min = parseInt(el.dataset.min, 10) || -Infinity;
     this.max = parseInt(el.dataset.max, 10) || Infinity;
 
     this.elementKey = el.nodeName === 'INPUT' ? 'value' : 'innerHTML';
@@ -21,10 +21,11 @@ export default class Cycle {
   }
 
   handleKeypress(event) {
+    // if (event.metaKey) return;
     const currentValue = parseInt(this.el[this.elementKey], 10);
 
     if (event.which === 13 || ['input', 'change'].includes(event.type)) {
-      this.setValue(currentValue);
+      this.setValue(currentValue, event.type !== 'input');
     }
 
     if (event.which === 38) {
@@ -42,14 +43,10 @@ export default class Cycle {
       event.which > 40 &&
       (event.which < 48 || event.which > 57)
     ) {
-      event.preventDefault();
-    }
-
-    if (event.which >= 48 && event.which <= 57) {
-      // let value = currentValue;
-      // value = parseInt((event.target.value + event.key).slice(-2), 10);
-      // this.setValue(parseInt(event.target.value + event.key));
-      // event.preventDefault();
+      if (!event.metaKey) {
+        console.log('preventing default');
+        event.preventDefault();
+      }
     }
   }
 
@@ -57,7 +54,7 @@ export default class Cycle {
     this.setValue(parseInt(v));
   }
 
-  setValue(newValue, update = true) {
+  setValue(newValue, update = false) {
     if (
       newValue >= this.min &&
       newValue < (isNaN(this.max) ? Infinity : this.max)

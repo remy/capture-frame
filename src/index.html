@@ -3,11 +3,10 @@
 
   <head>
     <meta charset="UTF-8">
-    <script src="./main.mjs" type="module"></script>
     <link rel="stylesheet" href="./styles.css">
   </head>
 
-  <body>
+  <body id="config">
     <div class="dimensions">
       <!-- <div class="controls"> -->
       <div>
@@ -18,19 +17,11 @@
       </div>
       <div>
         <label for="x" title="X, Y, Bottom, Right">Offset XY</label>
-        <input id="x" data-min="0" value="600"><span class="spacer"> / </span>
-        <input id="y" data-min="0" value="600">
-        <!-- :
-        <span id="bottom">0</span> /
-        <span id="right">0</span> -->
+        <input id="x" value="600"><span class="spacer"> / </span>
+        <input id="y" value="600">
       </div>
       <div class="border">
-        <label for="border">Border</label> <input id="border" type="color">
-        <!-- <span hidden id="upload">
-          <span>Background [transparent]</span>
-          <input type="file" accept="image/png, image/jpeg, image/gif">
-
-        </span> -->
+        <label for="border">Border</label> <input id="border" colorspace="display-p3" alpha type="color">
       </div>
       <div class="windowPreview">
         <div>
@@ -38,13 +29,13 @@
           <label for="titleBar">Title bar</label>
         </div>
         <div>
-          <input id="floatToTop" type="checkbox">
-          <label for="floatToTop">Float to top</label>
+          <input id="floating" type="checkbox">
+          <label for="floating">Always on top</label>
         </div>
       </div>
       <button>Lock</button>
     </div>
-
+    <script src="./main.mjs" type="module"></script>
   </body>
 
 </html>

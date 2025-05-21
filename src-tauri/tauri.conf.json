@@ -20,6 +20,7 @@
         "width": 800,
         "height": 600,
         "url": "frame.html",
+        "visible": false,
         "label": "frame"
       },
       {
@@ -29,6 +30,7 @@
         "url": "index.html",
         "label": "main",
         "resizable": false,
+        "visible": false,
         "fullscreen": false
       }
     ],
