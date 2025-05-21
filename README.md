@@ -1,7 +1,4 @@
-# Tauri + Vanilla
+# Capture Frame
 
-This template should help get you started developing with Tauri in vanilla HTML, CSS and Javascript.
+A simple app that lets me set an arbitrary frame but with exact coordinates so I can capture just that section and know what goes in and out of frame.
 
-## Recommended IDE Setup
-
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
