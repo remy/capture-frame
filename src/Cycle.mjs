@@ -66,10 +66,10 @@ export default class Cycle {
   }
 
   down(fast) {
-    this.setValue(fast ? this.value - 10 : this.value - 1);
+    this.setValue(fast ? this.value - 10 : this.value - 1, true);
   }
 
   up(fast) {
-    this.setValue(fast ? this.value + 10 : this.value + 1);
+    this.setValue(fast ? this.value + 10 : this.value + 1, true);
   }
 }

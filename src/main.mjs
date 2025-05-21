@@ -4,6 +4,8 @@ import Cycle from './Cycle.mjs';
 const API = window.__TAURI__;
 const { event, window: tauriWindow, webview, process, menu } = API;
 
+const store = await API.store.load('store.json', { autoSave: true });
+
 let locked = false;
 
 const appWindow = tauriWindow.getCurrentWindow();
@@ -22,31 +24,47 @@ const $border = $('#border');
 const $titleBar = $('#titleBar');
 const $floating = $('#floating');
 
+const _border = await store.get('border');
+const _floating = await store.get('floating');
+const _titleBar = await store.get('titleBar');
+
+console.log({ _floating, _titleBar, _border });
+
 let state = {
   x: 100,
   y: 100,
   width: 1280,
   height: 720,
-  floating: false,
-  titleBar: true,
-  border: '#000000',
+  floating: _floating,
+  titleBar: _titleBar,
+  border: _border || '#ff0000',
 };
 
 x.onUpdate = () => updateState('x', x.value);
 y.onUpdate = () => updateState('y', y.value);
 width.onUpdate = () => updateState('width', width.value);
 height.onUpdate = () => updateState('height', height.value);
-$titleBar.onchange = () => {
+$titleBar.onchange = async () => {
   updateState('titleBar', $titleBar.checked);
+  await store.set('titleBar', $titleBar.checked);
 };
-$floating.onchange = () => {
+$floating.onchange = async () => {
   updateState('floating', $floating.checked);
+  await store.set('floating', $floating.checked);
 };
-$border.onchange = () => {
+$border.onchange = async () => {
   // modify --border-color on body to $border.value
   document.body.style.setProperty('--border-color', $border.value);
   updateState('border', $border.value);
+  await store.set('border', $border.value);
 };
+
+$border.value = state.border;
+$titleBar.checked = state.titleBar;
+$floating.checked = state.floating;
+$titleBar.onchange();
+$floating.onchange();
+$border.onchange();
 
 $button.addEventListener(
   'click',
@@ -78,6 +96,8 @@ event.listen('menu-event', async (event) => {
 });
 
 event.listen('stateRefresh', (event) => {
+  console.log('refreshing state', event.payload);
+
   const newState = event.payload;
   width.setValue(newState.width, false);
   height.setValue(newState.height, false);

@@ -8,6 +8,9 @@ dependencies:
   '@tauri-apps/plugin-process':
     specifier: ~2
     version: 2.2.1
+  '@tauri-apps/plugin-store':
+    specifier: ~2.2.0
+    version: 2.2.0
   '@tauri-apps/plugin-window-state':
     specifier: ^2.2.2
     version: 2.2.2
@@ -142,6 +145,12 @@ packages:
 
   /@tauri-apps/plugin-process@2.2.1:
     resolution: {integrity: sha512-cF/k8J+YjjuowhNG1AboHNTlrGiOwgX5j6NzsX6WFf9FMzyZUchkCgZMxCdSE5NIgFX0vvOgLQhODFJgbMenLg==}
+    dependencies:
+      '@tauri-apps/api': 2.5.0
+    dev: false
+
+  /@tauri-apps/plugin-store@2.2.0:
+    resolution: {integrity: sha512-hJTRtuJis4w5fW1dkcgftsYxKXK0+DbAqurZ3CURHG5WkAyyZgbxpeYctw12bbzF9ZbZREXZklPq8mocCC3Sgg==}
     dependencies:
       '@tauri-apps/api': 2.5.0
     dev: false

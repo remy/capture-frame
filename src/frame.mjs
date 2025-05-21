@@ -1,20 +1,31 @@
 // when using `"withGlobalTauri": true`, you may use
 const API = window.__TAURI__;
 const { window: tauriWindow, event, dpi } = API;
+const store = await API.store.load('store.json', { autoSave: true });
 
 const appWindow = tauriWindow.getCurrentWindow();
 const frame = document.querySelector('#frame');
 
+const frameWidth = 8;
+
+const _border = await store.get('border');
+const _floating = await store.get('floating');
+const _titleBar = await store.get('titleBar');
+
 // this is a PITA
 let stateLock = false;
 let state = {
-  floating: false,
-  titleBar: true,
-  border: '#000000',
+  floating: _floating,
+  titleBar: _titleBar,
+  border: _border,
 };
 
 updateSize();
 updatePosition();
+
+readState();
+unlock();
+
 appWindow.onResized(updateSize);
 appWindow.onMoved(updatePosition);
 
@@ -37,14 +48,12 @@ event.listen('menu-event', async (event) => {
 
 event.listen('state', (event) => {
   const { prop, value } = event.payload;
+  console.log('setting state', prop, value);
   renderFromState({ ...state, [prop]: value });
 });
 
 event.listen('lock', lock);
 event.listen('unlock', unlock);
-
-readState();
-unlock();
 
 async function readState() {
   const { x, y } = await appWindow.innerPosition();
@@ -52,13 +61,16 @@ async function readState() {
   const floating = await appWindow.isAlwaysOnTop();
   const titleBar = await appWindow.isDecorated();
   state = {
-    x,
-    y,
-    width,
-    height,
-    floating,
-    titleBar,
+    ...state,
+    ...{
+      x: x + frameWidth,
+      y: y + frameWidth,
+      width: width - frameWidth * 2,
+      height: height - frameWidth * 2,
+    },
   };
+
+  document.body.style.setProperty('--border-color', state.border);
 }
 
 async function renderFromState(newState) {
@@ -67,8 +79,8 @@ async function renderFromState(newState) {
   if (newState.width || newState.height) {
     appWindow.setSize(
       new dpi.PhysicalSize({
-        width: newState.width,
-        height: newState.height,
+        width: newState.width + frameWidth * 2,
+        height: newState.height + frameWidth * 2,
       })
     );
   }
@@ -76,8 +88,8 @@ async function renderFromState(newState) {
   if (newState.x || newState.y) {
     appWindow.setPosition(
       new dpi.PhysicalPosition({
-        x: newState.x,
-        y: newState.y,
+        x: newState.x - frameWidth,
+        y: newState.y - frameWidth,
       })
     );
   }
@@ -123,15 +135,15 @@ function log(...args) {
 
 async function updatePosition(event) {
   const { x, y } = await appWindow.innerPosition();
-  state.x = x;
-  state.y = y;
+  state.x = x + frameWidth;
+  state.y = y + frameWidth;
   sendState();
 }
 
 async function updateSize() {
   const { width, height } = await appWindow.innerSize();
-  state.width = width;
-  state.height = height;
+  state.width = width - frameWidth * 2;
+  state.height = height - frameWidth * 2;
   sendState();
 }
 
